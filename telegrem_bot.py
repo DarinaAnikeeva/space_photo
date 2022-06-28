@@ -11,16 +11,20 @@ from epic_photos import get_epic_photos
 from dotenv import load_dotenv
 
 
-def combines_functions(images_path, count_photos_apod, count_photos_epic, api_key, flight_number):
+def combines_functions(images_path, 
+                       count_photos_apod, 
+                       count_photos_epic, 
+                       api_key,
+                       flight_number):
     get_apod_photos(images_path, count_photos_apod, api_key)
     get_epic_photos(images_path, count_photos_epic, api_key)
     get_fetch_spacex_launch(images_path, flight_number)
 
 
-def get_images(images_path,
-               count_photos_apod,
-               count_photos_epic,
-               api_key,
+def get_images(images_path, 
+               count_photos_apod, 
+               count_photos_epic, 
+               api_key, 
                time_sleep,
                flight_number=None,
                user_image=None):
@@ -55,9 +59,9 @@ def get_random_image(images_path,
                      flight_number,
                      time_sleep):
     if not os.path.exists(images_path):
-        combines_functions(images_path,
-                           count_photos_apod,
-                           count_photos_epic,
+        combines_functions(images_path, 
+                           count_photos_apod, 
+                           count_photos_epic, 
                            api_key,
                            flight_number)
     images = os.listdir(f'{images_path}/')
@@ -67,9 +71,9 @@ def get_random_image(images_path,
         images.remove(random_image)
         time.sleep(time_sleep)
     else:
-        combines_functions(images_path,
-                           count_photos_apod,
-                           count_photos_epic,
+        combines_functions(images_path, 
+                           count_photos_apod, 
+                           count_photos_epic, 
                            api_key,
                            flight_number)
 
@@ -84,9 +88,9 @@ if __name__ == '__main__':
     parser.add_argument('timer', nargs='?', default=20)
     namespace = parser.parse_args(sys.argv[1:])
 
-    get_images(images_path='images',
-               count_photos_apod=2,
-               count_photos_epic=1,
+    get_images(images_path='images', 
+               count_photos_apod=2, 
+               count_photos_epic=1, 
                api_key=api_key,
-               time_sleep=namespace.timer,
+               time_sleep=namespace.timer, 
                flight_number=108)
