@@ -8,11 +8,11 @@ def save_photos(url, images_path, name):
         os.mkdir(images_path)
     response = requests.get(url)
     response.raise_for_status()
-    with open(images_path + f'/{name}{expansion(url)}', 'wb') as file:
+    with open(images_path + f'/{name}{get_expansion(url)}', 'wb') as file:
         file.write(response.content)
 
 
-def expansion(url):
+def get_expansion(url):
     url_division = urllib.parse.urlsplit(url, scheme='', allow_fragments=True)
     url_path = url_division[2]
     filename = os.path.splitext(url_path)

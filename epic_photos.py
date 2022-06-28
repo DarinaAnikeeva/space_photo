@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from save_photos import save_photos
 
 
-def epic_photos(images_path, count_photos_epic, api_key):
+def get_epic_photos(images_path, count_photos_epic, api_key):
     url = "https://api.nasa.gov/EPIC/api/natural/images"
     payload = {
         'api_key': api_key
@@ -21,4 +21,4 @@ def epic_photos(images_path, count_photos_epic, api_key):
 if __name__ == '__main__':
     load_dotenv()
     nasa_token = os.environ['NASA_TOKEN']
-    epic_photos('aboba', 3, nasa_token)
+    get_epic_photos('aboba', 3, nasa_token)

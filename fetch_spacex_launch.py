@@ -2,7 +2,7 @@ import requests
 from save_photos import save_photos
 
 
-def fetch_spacex_launch(images_path, flight_number=None):
+def get_fetch_spacex_launch(images_path, flight_number=None):
     url = 'https://api.spacexdata.com/v3/launches'
     response = requests.get(url)
     response.raise_for_status()
@@ -20,4 +20,4 @@ def fetch_spacex_launch(images_path, flight_number=None):
 
 
 if __name__ == '__main__':
-    fetch_spacex_launch('image', 108)
+    get_fetch_spacex_launch('image', 108)
