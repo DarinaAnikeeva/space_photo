@@ -11,37 +11,41 @@ from epic_photos import get_epic_photos
 from dotenv import load_dotenv
 
 
-def combines_functions(images_path, count_photos_apod, count_photos_epic, api_key, flight_number):
+def combine_functions(images_path, count_photos_apod, count_photos_epic, api_key, flight_number):
     get_apod_photos(images_path, count_photos_apod, api_key)
     get_epic_photos(images_path, count_photos_epic, api_key)
     get_fetch_spacex_launch(images_path, flight_number)
 
 
-def get_images(images_path, count_photos_apod, count_photos_epic, api_key, time_sleep,
-               flight_number=None,
-               user_image=None):
+def send_images_to_telegram(images_path, count_photos_apod, count_photos_epic, api_key, time_sleep,
+                            flight_number=None,
+                            user_image=None):
     if user_image:
-        bot.send_document(chat_id=chat_id, document=open(f'{user_image}', 'rb'))
+        send_image(images_path, user_image)
         time.sleep(time_sleep)
-        get_images(images_path, count_photos_apod, count_photos_epic, api_key, time_sleep,
-                   flight_number=None)
+        send_images_to_telegram(images_path, count_photos_apod, count_photos_epic, api_key, time_sleep,
+                                flight_number=None)
     else:
-        get_random_image(images_path, count_photos_apod, count_photos_epic, api_key, flight_number, time_sleep)
-        get_images(images_path, count_photos_apod, count_photos_epic, api_key, time_sleep,
-                   flight_number=None)
+        send_random_image(images_path, count_photos_apod, count_photos_epic, api_key, flight_number, time_sleep)
+        send_images_to_telegram(images_path, count_photos_apod, count_photos_epic, api_key, time_sleep,
+                                flight_number=None)
 
+def send_image(image_directory, image):
+    with open(f'{image_directory}/{image}', 'rb') as file:
+        bot.send_document(chat_id=chat_id, document=file)
+        
 
-def get_random_image(images_path, count_photos_apod, count_photos_epic, api_key, flight_number, time_sleep):
+def send_random_image(images_path, count_photos_apod, count_photos_epic, api_key, flight_number, time_sleep):
     if not os.path.exists(images_path):
-        combines_functions(images_path, count_photos_apod, count_photos_epic, api_key, flight_number)
+        combine_functions(images_path, count_photos_apod, count_photos_epic, api_key, flight_number)
     images = os.listdir(f'{images_path}/')
     while images:
         random_image = random.choice(images)
-        bot.send_document(chat_id=chat_id, document=open(f'{images_path}/{random_image}', 'rb'))
+        send_image(images_path, random_image)
         images.remove(random_image)
         time.sleep(time_sleep)
     else:
-        combines_functions(images_path, count_photos_apod, count_photos_epic, api_key, flight_number)
+        combine_functions(images_path, count_photos_apod, count_photos_epic, api_key, flight_number)
 
 
 if __name__ == '__main__':
@@ -54,9 +58,9 @@ if __name__ == '__main__':
     parser.add_argument('timer', nargs='?', default=20)
     namespace = parser.parse_args(sys.argv[1:])
 
-    get_images(images_path='images', 
-               count_photos_apod=2, 
-               count_photos_epic=1, 
-               api_key=api_key,
-               time_sleep=namespace.timer,
-               flight_number=108)
+    send_images_to_telegram(images_path='images',
+                            count_photos_apod=2,
+                            count_photos_epic=1,
+                            api_key=api_key,
+                            time_sleep=namespace.timer,
+                            flight_number=108)
